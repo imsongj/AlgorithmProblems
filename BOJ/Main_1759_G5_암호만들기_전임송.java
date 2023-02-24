@@ -3,11 +3,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-//15683 감시
-//모든 경우 탐색, 조합(각 cctv 마다 4방향 경우를 체크해야한다; 5번일때는 불필요), 사다리랑 비슷하다: 각 cctv 마다, 각 방향마다 조합
-// 전체 빈 칸 - cctv감시 칸  = 사각지대
-//void findVisable(int cctv type, int r, int c, int direction) 1: 
-public class Main {
+//1759 암호만들기
+// 알파벳 정렬 후 조합
+
+public class Main_1759_G5_암호만들기_전임송 {
 	static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
 	static int L;
 	static int C;
