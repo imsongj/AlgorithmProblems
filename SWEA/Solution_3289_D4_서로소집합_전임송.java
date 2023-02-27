@@ -1,13 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
-//7465 창용 마을 무리의 개수
+//3289 서로소집합
 
-public class Solution { 
+public class Solution_3289_D4_서로소집합_전임송 { 
+	static final int UNION_OPERATION = 0;
+	static final int CHECK_OPERATION = 1;
 	static int[] parents;
 	
 	public static void makeSet(int v) {
@@ -21,7 +20,7 @@ public class Solution {
 		return parents[v];
 	}
 	public static void union(int a, int b) {
-		parents[findSet(b)] = findSet(a);
+		parents[findSet(a)] = findSet(b);
 	}
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -38,15 +37,20 @@ public class Solution {
 			}
 			for (int i = 0; i < m; i++) {
 				input = br.readLine().split(" ");
-				int a = Integer.parseInt(input[0]);
-				int b = Integer.parseInt(input[1]);
+				int operation = Integer.parseInt(input[0]);
+				int a = Integer.parseInt(input[1]);
+				int b = Integer.parseInt(input[2]);
+				if (operation == CHECK_OPERATION) {
+					if (findSet(a) == findSet(b)) {
+						sb.append(1);
+						continue;
+					}
+					sb.append(0);
+					continue;
+				}
 				union(a,b);
 			}
-			Set<Integer> set = new HashSet<>();
-			for (int i = 1; i <= n; i++) {
-				set.add(findSet(i));
-			}
-			System.out.printf("#%d %s%n", t, set.size());
+			System.out.printf("#%d %s%n", t, sb.toString());
 		}
 		br.close();
 	}

@@ -7,7 +7,7 @@ import java.util.Set;
 
 //7465 창용 마을 무리의 개수
 
-public class Solution { 
+public class Solution_7465_D4_창용마을무리의개수_전임송 { 
 	static int[] parents;
 	
 	public static void makeSet(int v) {
