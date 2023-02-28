@@ -1,53 +1,75 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
-//7465 창용 마을 무리의 개수
+//1238 Contact
 
 public class Solution { 
-	static int[] parents;
-	
-	public static void makeSet(int v) {
-		parents[v] = v;
-	}
-	public static int findSet(int v) {
-		if (parents[v] == v) {
-			return v;
-		}
-		parents[v] = findSet(parents[v]);
-		return parents[v];
-	}
-	public static void union(int a, int b) {
-		parents[findSet(b)] = findSet(a);
-	}
+	static final int SIZE = 100;
+	static int N;
+	static int start;
+	static Set<Integer>[] adj;
+	static int[] visited;
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int testCase = Integer.parseInt(br.readLine());
+		int testCase = 10;
 		
 		for (int t = 1; t <= testCase; t++) {
 			StringBuilder sb = new StringBuilder();
 			String[] input = br.readLine().split(" ");
-			int n = Integer.parseInt(input[0]);
-			int m = Integer.parseInt(input[1]);
-			parents = new int[n + 1];
-			for (int i = 1; i <= n; i++) {
-				makeSet(i);
+			N = Integer.parseInt(input[0]);
+			start = Integer.parseInt(input[1]);
+			
+			adj = new Set[SIZE + 1];
+			visited = new int[SIZE + 1];
+			for (int i = 1; i <= SIZE; i++) {
+				adj[i] = new HashSet<>();
 			}
-			for (int i = 0; i < m; i++) {
-				input = br.readLine().split(" ");
-				int a = Integer.parseInt(input[0]);
-				int b = Integer.parseInt(input[1]);
-				union(a,b);
+			input = br.readLine().split(" ");
+			for (int i = 0; i < N; i += 2) {
+				int a = Integer.parseInt(input[i]);
+				int b = Integer.parseInt(input[i + 1]);
+				adj[a].add(b);
 			}
-			Set<Integer> set = new HashSet<>();
-			for (int i = 1; i <= n; i++) {
-				set.add(findSet(i));
+			int lastNum = 0;
+			int lastOrder = 0;
+			Queue<Integer> queue = new ArrayDeque<Integer>();
+			queue.add(start);
+			visited[start] = 1;
+			while (!queue.isEmpty()) {
+				int current = queue.poll();
+				int currentOrder = visited[current];
+				if (lastOrder < currentOrder) {
+					lastNum = current;
+				}
+				if (lastOrder == currentOrder && lastNum < current) {
+					lastNum = current;
+				}
+				int order = currentOrder + 1;
+				
+				for (int neighbor : adj[current]) {
+					if (visited[neighbor] > 0) {
+						continue;
+					}
+					visited[neighbor] = order;
+					queue.add(neighbor);
+				}
 			}
-			System.out.printf("#%d %s%n", t, set.size());
+			for (int i = 0; i < 20; i++) {
+				System.out.print(visited[i]);
+			}
+			System.out.printf("#%d %d%n", t, lastNum);
 		}
+		
 		br.close();
 	}
 }

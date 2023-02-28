@@ -9,7 +9,7 @@ import java.util.Queue;
 
 //17471 게리맨더링
 
-public class Main {
+public class Main_17471_G4_게리맨더링_전임송 {
 	static int N;
 	static int[] population;
 	static List<Integer>[] adj;
@@ -32,17 +32,16 @@ public class Main {
 			for (int j = 0; j < m; j++) {
 				int neighbor = Integer.parseInt(input[j + 1]);
 				adj[i].add(neighbor);
-				adj[neighbor].add(i);
 			}
 		}
 		getSubset();
-		if (minDifference == Integer.MAX_VALUE) {
+		if (minDifference == Integer.MAX_VALUE) { //나눌수 없는경우 -1 출력
 			minDifference = -1;
 		}
 		System.out.println(minDifference);
 	}
 	
-	public static void getSubset() {
+	public static void getSubset() { //모든 부분집합 탐색
 		for (int i = 0; i < 1 << N; i++) {
 			List<Integer> selectedRed = new ArrayList<>(10);
 			List<Integer> selectedBlue = new ArrayList<>(10);
@@ -57,6 +56,7 @@ public class Main {
 		}
 	}
 	
+	//두 구역 연결 체크
 	public static void check(List<Integer> selectedRed, List<Integer> selectedBlue) {
 		if (selectedRed.size() == 0 || selectedBlue.size() == 0) {
 			return;
@@ -66,10 +66,11 @@ public class Main {
 		if (redPopulation == -1 || bluePopulation == -1) {
 			return;
 		}
-		System.out.printf("%s %s %d%n", selectedRed.toString(), selectedBlue.toString(), Math.abs(redPopulation - bluePopulation));
+		//System.out.printf("%s %s %d%n", selectedRed.toString(), selectedBlue.toString(), Math.abs(redPopulation - bluePopulation));
 		minDifference = Math.min(Math.abs(redPopulation - bluePopulation), minDifference);
 	}
 	
+	//BFS로 각 구역이 연결되어있는지 확인
 	public static int getPopulation(List<Integer> selected) {
 		int sum = 0;
 		int numberOfSelected = selected.size();
