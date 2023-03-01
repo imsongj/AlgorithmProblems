@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//20058 마법사상어와파이어스톰
-// 1. 격자 90도 돌리기
-// 2. 얼음 처리
-		//모든칸탐색, 사방에 얼음이 없는 칸이 3개 미만이면 얼음 수 - 1;
-public class Main {	
+//14267 회사문화1
+//모든 직원의 부하직원 리스트 생성
+//모든 칭찬 종합 리스트 생성
+//직속 상사의 번호는 자기 번호보다 작다 -> 상사 부하 관계는 오름차순	
+	//작은 직원 번호부터 칭찬 더하며 쌓아가기
+public class Main_14267_회사문화1 {	
 	static int N;
 	static List<Integer>[] lowerWorkers;
 	static int[] compliments;
