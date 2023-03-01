@@ -12,7 +12,7 @@ import java.util.Set;
 
 //1238 Contact
 
-public class Solution { 
+public class Solution_1238_D4_Contact_전임송 { 
 	static final int SIZE = 100;
 	static int N;
 	static int start;

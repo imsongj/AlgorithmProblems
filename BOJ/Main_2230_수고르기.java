@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 //2230 수 고르기
 
-public class Main {
+public class Main_2230_수고르기 {
 	static int N;
 	static int M;
 	static int[] numbers;
