@@ -11,7 +11,7 @@ import java.util.Queue;
 // 1. 격자 90도 돌리기
 // 2. 얼음 처리
 		//모든칸탐색, 사방에 얼음이 없는 칸이 3개 미만이면 얼음 수 - 1;
-public class Main {	
+public class Main_20058_마법사상어와파이어스톰 {	
 	static final int REQUIRED_ICE = 3;
 	
 	static class Position {

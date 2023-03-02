@@ -7,7 +7,7 @@ import java.util.Queue;
 //16236 아기상어
 //먹을 수 있는 물고기가 없으면 종료
 //현재 상어 위치에서 bfs로 제일 가까운, 먹을수 있는 물고기 탐색
-public class Main2 {
+public class Main_16236_G3_아기상어_전임송 {
 	static final int SHARK = 9;
 	static final int EMPTY = 0;
 	
