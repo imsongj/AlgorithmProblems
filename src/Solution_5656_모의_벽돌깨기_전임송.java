@@ -3,13 +3,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-
-
 //5656 벽돌깨기
 //구슬 떨어트리는 위치 순열 탐색 -> 중복 순열 사용해야함
 //깨질 벽돌 표시 - 재귀 사용
 //벽돌 제거 후 중력 적용
-public class Solution { 
+
+//계속 중복적으로 깨면서 반복할 필요가 없다, 순열에서 차례대로 제거 유지
+
+public class Solution_5656_모의_벽돌깨기_전임송 { 
 	static final int EMPTY = 0;
 	static int[] dr = {0, 0, -1, 1}; 
 	static int[] dc = {-1, 1, 0, 0};
