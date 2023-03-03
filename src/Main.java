@@ -1,165 +1,181 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.PriorityQueue;
 
-//20058 마법사상어와파이어스톰
-// 1. 격자 90도 돌리기
-// 2. 얼음 처리
-		//모든칸탐색, 사방에 얼음이 없는 칸이 3개 미만이면 얼음 수 - 1;
+
+//16235 나무재테크
+// 처음 양분  = 5
+// 1. 나이만큼 땅의 양분을 먹고 나이 + 1, 한칸에 여러 개의 나무가 있다면 나이가 어린 나무부터 양분을 먹는다.
+	//칸마다 나이순 pq?
+	//만약 양분이 부족해 자신의 나이만큼 먹을 수 없으면 나무는 죽는다.
+//2. 죽은 나무는 나이 / 2 만큼의 양분으로 변한다.
+//3. 나이가 5의 배수인 나무가 번식하여 인접한 8개의 칸에 나이가 1인 나무가 추가된다.
+//4. 땅에 A배열 값 대로 양분을 추가한다
+//k년동안 반복
 public class Main {	
-	static final int REQUIRED_ICE = 3;
+	static final int INITIAL_RESOURCE = 5;
+	static final int INITIAL_AGE = 1;
+	static final int AGE_CONDITION = 5;
 	
-	static class Position {
-		int r;
-		int c;
-		public Position(int r, int c) {
-			super();
-			this.r = r;
-			this.c = c;
-		}
-		
-	}
+	static int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
+	static int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1};
+	
 	static int N;
-	static int NN;
-	static int[][] ice;
+	static int M;
+	static int K;
+	static int[][] A;
+	static int[][] resource;
+	static int[][] additionalResource;
 	
-	static int[] dr = {0, 0, -1, 1};
-	static int[] dc = {-1, 1, 0, 0};
-
+	static PriorityQueue<Integer>[][] land; //나무 정보 저장 **우선순위큐로 하면 시간초과, 정렬없이 덱을 사용해서 새로 생긴 나무들 왼쪽에 넣으면서 진행
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String[] input = br.readLine().split(" ");
 		N = Integer.parseInt(input[0]);
-		int Q = Integer.parseInt(input[1]);
-		NN = (int) Math.pow(2, N);
-		ice = new int[NN][NN];
-		for (int r = 0; r < NN; r++) {
+		M = Integer.parseInt(input[1]);
+		K = Integer.parseInt(input[2]);
+		A = new int[N][N];
+		
+		for (int r = 0; r < N; r++) {
 			input = br.readLine().split(" ");
-			for (int c = 0; c < NN; c++) {
-				ice[r][c] = Integer.parseInt(input[c]);
+			for (int c = 0; c < N; c++) {
+				A[r][c] = Integer.parseInt(input[c]);
 			}
-		}
-		input = br.readLine().split(" ");
-		for (int i = 0; i < Q; i++) {
-			int level = Integer.parseInt(input[i]);
-			castSpell(level);
-			reduceIce();
-		}
-
-		System.out.printf("%d%n%d%n", countIce(), findCluster());
-	}
-	
-	public static void castSpell(int level) { //level에 따라 파이어스톰을 시전한다, 
-		int size = (int) Math.pow(2, level);
-		int numberOfSplits = NN / size;
-		int[][] copyIce = new int[NN][NN];
-		for (int r = 0; r < numberOfSplits; r++) {
-			for (int c = 0; c < numberOfSplits; c++) { //각 격자별로 회전
-				rotate(copyIce, r * size, c * size, size);
-			}
-		}
-		ice = copyIce;
-	}
-	
-	public static void rotate(int[][] copyIce, int startR, int startC, int size) { //90도 회전
-		for (int r = 0; r < size; r++) {
-			for (int c = 0; c < size; c++) {
-				copyIce[r + startR][c + startC] = ice[(size - c - 1) + startR][r + startC];
-			}
-		}
-	}
-	public static void reduceIce() {
-		int[][] reduced = new int[NN][NN];
-		
-		for (int r = 0; r < NN; r++) {
-			for (int c = 0; c < NN; c++) {
-				int iceCount = 0;
-				for (int d = 0; d < 4; d++) { //사방탐색
-					int newR = r + dr[d];
-					int newC = c + dc[d];
-					if (newR < 0 || newR >= NN || newC < 0 || newC >= NN) {
-						continue;
-					}
-					if (ice[newR][newC] == 0) {
-						continue;
-					}
-					iceCount++;
-				}
-				if (iceCount < REQUIRED_ICE) {
-					reduced[r][c] = -1; //줄어들 얼음 위치 저장
-				}
-			}
-		}
-		for (int r = 0; r < NN; r++) {
-			for (int c = 0; c < NN; c++) {
-				if (ice[r][c] > 0) {
-					ice[r][c] += reduced[r][c]; //얼음 양 변화 반영
-				}
-			}
-		}
-	}
-	
-	public static int countIce() { //전체 얼음 수 카운트
-		int sum = 0;
-		for (int r = 0; r < NN; r++) {
-			for (int c = 0; c < NN; c++) {
-				sum += ice[r][c];
-			}
-		}
-		return sum;
-	} 
-	
-	public static int findCluster() {
-		boolean[][] visited = new boolean[NN][NN];
-		int clusterSize = 0;
-		for (int r = 0; r < NN; r++) {
-			for (int c = 0; c < NN; c++) { //모든 칸에서 bfs 탐색 시작
-				clusterSize = Math.max(clusterSize, bfs(visited, r, c));
-			}
-		}
-		return clusterSize;
-	}
-	
-	public static int bfs(boolean[][] visited, int r, int c) { 
-		int size = 0;
-		if (visited[r][c] || ice[r][c] == 0) { //0이 아니거나 방문 안한 칸일때만 탐색
-			return size;
 		}
 		
-		Queue<Position> queue = new ArrayDeque<>();
-		size++;
-		visited[r][c] = true;
-		queue.add(new Position(r, c));
+		resource = new int[N][N];
+		land = new PriorityQueue[N][N]; //초기화
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				land[r][c] = new PriorityQueue<>();
+				resource[r][c] = INITIAL_RESOURCE;
+			}
+		}
 		
-		while (!queue.isEmpty()) {
-			Position current = queue.poll();
+		for (int i = 0; i < M; i++) {
+			input = br.readLine().split(" ");
+			int r = Integer.parseInt(input[0]) - 1;
+			int c = Integer.parseInt(input[1]) - 1;
+			int age = Integer.parseInt(input[2]);
+			land[r][c].add(age); //나무 추가  **입력은 같은 자리에 나무 추가 없음 **
+		}
+		
+		for (int y = 0; y < K; y++) {
+			spring();
+			summer();
+			fall();
+			winter();
+			//print(land);
+			//print(resource);
 			
-			for (int d = 0; d < 4; d++) { //사방탐색
-				int newR = current.r + dr[d];
-				int newC = current.c + dc[d];
-				if (newR < 0 || newR >= NN || newC < 0 || newC >= NN) {
-					continue;
-				}
-				if (visited[newR][newC] || ice[newR][newC] == 0) {
-					continue;
-				}
-				size++;
-				visited[newR][newC] = true;
-				queue.add(new Position(newR, newC));
-			}
 		}
-		return size;
+		System.out.println(countTrees());
 	}
 	
-	static public void printIce() {
-		for (int r = 0; r < NN; r++) {
-			System.out.println(Arrays.toString(ice[r]));
+	public static void spring() { 
+		additionalResource = new int[N][N];
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				if (land[r][c].isEmpty()) {
+					continue;
+				}
+				growTree(r, c);
+			}
+		}
+	}
+	
+	public static void growTree(int r, int c) {
+		int size = land[r][c].size();
+		PriorityQueue<Integer> tmpQueue = new PriorityQueue<>();
+		for (int i = 0; i < size; i++) { //모든 나무 탐색(나이 적은 순으로)
+			int age = land[r][c].poll();
+			if (resource[r][c] < age) { //자원이 충분하지않으면 죽는다.
+				additionalResource[r][c] += age / 2; //여름에 추가할 자원 저장
+				continue;
+			}
+			resource[r][c] -= age; //자원 소비
+			tmpQueue.add(age + 1); //나이 증가
+		}
+		land[r][c] = tmpQueue; //생존한 나무 
+	}
+	public static void summer() {
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				resource[r][c] += additionalResource[r][c]; //죽은 나무 자원 추가
+			}
+		}
+	}
+	
+	public static void fall() {
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				if (land[r][c].isEmpty()) {
+					continue;
+				}
+				int size = land[r][c].size();
+				PriorityQueue<Integer> tmpQueue = new PriorityQueue<>();
+				for (int i = 0; i < size; i++) { //모든 나무 탐색(나이 적은 순으로)
+					int age = land[r][c].poll();
+					if (age % AGE_CONDITION == 0) { //5의 배수이면
+						spread(r, c);
+					}
+					tmpQueue.add(age); //나이 증가
+				}
+				land[r][c] = tmpQueue;
+			}
+		}
+	}
+	
+	public static void winter() {
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				resource[r][c] += A[r][c]; //a배열 값 추가
+			}
+		}
+	}
+	public static void spread(int r, int c) { //8방으로 나이 1인 나무 추가
+		for (int d = 0; d < 8; d++) {
+			int newR = r + dr[d];
+			int newC = c + dc[d];
+			
+			if (newR < 0 || newR >= N || newC < 0 || newC >= N) {
+				continue;
+			}
+			land[newR][newC].add(INITIAL_AGE);
+		}
+	}
+	
+	public static int countTrees() {
+		int count = 0;
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				count += land[r][c].size();
+			}
+		}
+		return count;
+	}
+	public static void print(int[][] board) {
+		for (int r = 0; r < board.length; r++) {
+			System.out.println(Arrays.toString(board[r]));
+		}
+		System.out.println();
+	}
+	public static void print(PriorityQueue<Integer>[][] board) {
+		for (int r = 0; r < board.length; r++) {
+			System.out.println(Arrays.toString(board[r]));
 		}
 		System.out.println();
 	}
 }
+
+/*5 2 9
+2 3 2 3 2
+2 3 2 3 2
+2 3 2 3 2
+2 3 2 3 2
+2 3 2 3 2
+2 1 3
+3 2 3*/ //34
