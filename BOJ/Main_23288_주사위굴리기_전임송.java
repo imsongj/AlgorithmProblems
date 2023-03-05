@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 	//A < B, 이동방향 반시계 방향으로 회전
 	// 이동방향 변화 없음
 
-public class Main {	
+public class Main_23288_주사위굴리기_전임송 {	
 	static final int START_ROW = 1;
 	static final int START_COL = 1;
 	static final int EAST = 0;
