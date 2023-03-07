@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 //벨트 위 상황 저장 -> 1차원 배열 2N 크기, 벨트 위 배열 시작 인덱스, 끝 인덱스 저장, 이동 - 인덱스 수정
 
 public class Main {	
-	static final int NUMBER_OF_STEPS = 4;
-	
 	static int N;
 	static int K;
 
@@ -32,42 +30,38 @@ public class Main {
 		}
 		start = 0; //벨트 위 시작 인덱스
 		end = N - 1; //벨트 위 끝 인덱스
-		for (int i = 0; i < 10; i++) {
-			printBelt();
-			moveBelt();
-
-		}
+		System.out.println(runSimulation());
 	}
 	public static int runSimulation() {
 		int step = 0; //현재단계
 		while (true) {
-			boolean stop = false;
-			if (step == 0) { //1단계
-				moveBelt();
+			step++;
+			if (count >= K) {
+				return step;
 			}
-			if (step == 1) { //2단계
-				stop = moveRobot();
-			}
-			if (step == 2) { //3단계
-	
-			}
-			if (step == 3) { //4단계
-				
-			}
-			if (stop) {
-				break;
-			}
-			step = (step + 1) % NUMBER_OF_STEPS;
+			moveBelt();
+			moveRobot();
+			addRobot();
+			//printBelt();
+			
 			
 		}
-		return step;
 	}
 	
- 	public static boolean moveRobot() {
+	public static void moveBelt() {
+ 		start = reduceIndex(start);
+ 		end = reduceIndex(end);
+ 		if (robot[end]) { //로봇이 마지막 칸 도달하면 내린다.
+ 			robot[end] = false;
+ 		}
+ 	}
+ 	
+ 	public static void moveRobot() {
  		int index = end;
  		int nextIndex;
  		for (int i = 0; i < N; i++) {
  			if (!robot[index]) { //해당 칸에 로봇 없는 경우
+ 				index = reduceIndex(index);
  				continue;
  			}
  			nextIndex = (index + 1) % beltLength;
@@ -75,40 +69,54 @@ public class Main {
  			if (!robot[nextIndex] && belt[nextIndex] > 0) {
  				robot[nextIndex] = true;
  				robot[index] = false;
- 				belt[nextIndex]--;
+ 				useBelt(nextIndex);
+ 				if (robot[end]) { //로봇이 마지막 칸 도달하면 내린다.
+ 		 			robot[end] = false;
+ 		 		}
  			}
- 			index--;
- 			if (index < 0) {
- 				index = beltLength - 1;
- 	 		}
  		}
-		return false;
 	}
  	
- 	public static boolean addRobot() {
- 		
- 	}
- 	
-	public static void moveBelt() {
- 		start--;
- 		if (start < 0) {
- 			start = beltLength - 1;
- 		}
- 		end--;
- 		if (end < 0) {
- 			end = beltLength - 1;
- 		}
- 		if (robot[end]) { //로봇이 마지막 칸 도달하면 내린다.
- 			robot[end] = false;
+ 	public static void addRobot() {
+ 		if (belt[start] != 0) {
+ 			robot[start] = true;
+ 			useBelt(start);
  		}
  	}
  	
- 	public static void printBelt() {
- 		int index = start;
- 		for (int i = 0; i < N; i++) {
- 			System.out.printf("%d ", belt[index]);
- 			index = (index + 1) % beltLength;
+	public static void useBelt(int index) {
+		belt[index]--;
+		if (belt[index] == 0) {
+			count++;
+		}
+	}
+	
+	public static int reduceIndex(int index) {
+		index--;
+ 		if (index < 0) {
+ 			index = beltLength - 1;
  		}
- 		System.out.println();
- 	}
+ 		return index;
+	}
+	
+	public static void printBelt() {
+		int index = start;
+		for (int i = 0; i < beltLength / 2; i++) {
+			System.out.printf("%d ", belt[index % beltLength]);
+			index++;
+		}
+		System.out.println();
+		index += beltLength / 2 - 1;
+		for (int i = 0; i < beltLength / 2; i++) {
+			System.out.printf("%d ", belt[(index - i) % beltLength]);
+		}
+		System.out.println();
+		index = start;
+		for (int i = 0; i < beltLength / 2; i++) {
+			System.out.printf("%b ", robot[index % beltLength]);
+			index++;
+		}
+		System.out.println();
+		System.out.println();
+	}
 }

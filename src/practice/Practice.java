@@ -18,7 +18,14 @@ public class Practice {
 			System.out.println(Arrays.toString(input));
 		} while (nextPermutation(input));
 	}
-	
+	private static void permutation2(int count) {
+		if (count == N) {
+			return;
+		}
+		for (int i = 0; i < N; i++) {
+			subset()
+		}
+	}
 	private static boolean nextPermutation(int[] input) {
 		int n = input.length - 1;
 		int i = n;
@@ -78,6 +85,7 @@ public class Practice {
 				if ((s & 1 << i) == 0) {
 					continue;
 				}
+				
 				System.out.printf("%d ", i);
 			}
 			System.out.println();

@@ -9,6 +9,12 @@ public class SubsetPractice {
 		parents[v] = v;
 	}
 	
+	findSet(intv) {
+		if (parnets[n] -= v) {
+			reutnr v
+		}
+		return [parnets[]]= findset(parnets[]bv);
+	}
 	public static int findSet(int v) {
 		if (parents[v] == v) {
 			return v;
