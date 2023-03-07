@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 //내구도 저장
 //벨트 위 상황 저장 -> 1차원 배열 2N 크기, 벨트 위 배열 시작 인덱스, 끝 인덱스 저장, 이동 - 인덱스 수정
 
-public class Main {	
+public class Main_20055_컨베이어벨트위의로봇_전임송 {	
 	static int N;
 	static int K;
 
