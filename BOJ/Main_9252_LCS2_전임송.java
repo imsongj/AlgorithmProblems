@@ -8,7 +8,7 @@ import java.util.Arrays;
 //모든 알파벳 비교
 // 1. 같으면 그 전
 
-public class Main {	
+public class Main_9252_LCS2_전임송 {	
 	static long K;
 	static int[][] dp;
 	public static void main(String[] args) throws IOException {
