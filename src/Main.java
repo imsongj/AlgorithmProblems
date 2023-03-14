@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.PriorityQueue;
 
 //16398 행성연결
@@ -63,8 +62,13 @@ public class Main {
 			}
 			
 			result += min.weight;
-			queue.addAll(adj[min.to]);
 			visited[min.to] = true;
+			for (Edge edge : adj[min.to]) { //방문 안한 노드만 
+				if (visited[edge.to]) {
+					continue;
+				}
+				queue.add(edge);
+			}
 			count++;
 		}
 		System.out.println(result);
