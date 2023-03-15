@@ -3,10 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.PriorityQueue;
 
-//2263 트리의 순회
+//16398 행성연결
+//간선 수가 많기 때문에 prim's 사용
+//1. 간선들 오름차순 정렬
+//2. union find 사용으로 사이클 방지
+// 	간선의 양끝 정점이 같은 집합에 속해 있는지를 먼저 검사
 
-
-public class Main {	
+public class Main_16398_행성연결_전임송 {	
 	public static class Edge implements Comparable<Edge>{
 		int from;
 		int to;
