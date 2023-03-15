@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
  *    1 2 4 3
  */
 
-public class Main {	
+public class Main_2263_트리의순회_전임송 {	
 	static int N;
 	static int[] inOrder;
 	static int[] inOrderPlace;
