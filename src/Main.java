@@ -1,86 +1,81 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-//2263 트리의 순회
+//1781 컵라면
 /*
- * 인오더와 포스트오더가 주어진다
- * - 인오더: L root R, ; 포스트오더 : L R root
- * - 프리오더: root L R
- *       1		in : 4, 2, 5,  1, 6, 3, 7  	루트 기준으로 양쪽이 subtree
- *     2   3	post : 4, 5, 2, 6, 7, 3, 1 	마지막이 루트, 루트 다음은 무조건 R루트, in에서 루트의 오른쪽전체를 빼면 그 다음 L루트
- *    4 5 6 7	pre : 1 2 4 5 3 6 7
- *    
- *    post에서 루트 찾고 post 루트기준 양쪽 재귀, 재귀 순서는 루트, 왼쪽, 오른쪽
- *    in: 2 1 3
- *    post: 2 3 1
- *    pre : 1 2 3
- *    
- *    in: 4 2 1 3
- *    post : 4 2 3 1
- *    1 2 4 3
+ * 데드라인별 숫자 카운트 데드라인이 빠른순, 컵라면 많은 순 정렬
+ * 
  */
 
 public class Main {	
+	static class Problem implements Comparable<Problem> {
+		int number;
+		int deadline;
+		int count;
+		public Problem(int number, int deadline, int count) {
+			super();
+			this.number = number;
+			this.deadline = deadline;
+			this.count = count;
+		}
+		@Override
+		public int compareTo(Problem o) {
+			if (count > o.count) {
+				return -1;
+			}
+			if (count < o.count) {
+				return 1;
+			}
+			return o.deadline - deadline; 
+		}
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("Problem [number=").append(number).append(", deadline=").append(deadline).append(", count=")
+					.append(count).append("]");
+			return builder.toString();
+		}
+	}
+	static final int MAX_N = 200_001;
 	static int N;
-	static int[] inOrder;
-	static int[] inOrderPlace;
-	static int[] postOrder;
 	static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		inOrder = new int[N];
-		inOrderPlace = new int[N + 1]; //해당 숫자의 인덱스 값 저장
-		postOrder = new int[N];
+
 		String[] line;
-		line = br.readLine().split(" ");
-		for (int i = 0; i < N; i++) {
-			int number = Integer.parseInt(line[i]);
-			inOrder[i] = number;
-			inOrderPlace[number] = i;
-		}
-		line = br.readLine().split(" ");
-		for (int i = 0; i < N; i++) {
-			int number = Integer.parseInt(line[i]);
-			postOrder[i] = number;
-		}
-		getPreOrder(0, N - 1, N - 1);
-		System.out.println(sb.toString());
-	}
-	
-	public static void getPreOrder(int inStartIndex, int inEndIndex, int postEndIndex) {
-		int root = postOrder[postEndIndex];
-		int inRootIndex = inOrderPlace[root]; //루트 기준 양쪽 트리에 노드가 몇개씩 있는지 알수있다
-		int lCount = inRootIndex - inStartIndex; //왼쪽 트리 노드 개수
-		int rCount = inEndIndex - inRootIndex; //오른쪽 트리 노드 개수
+		int[] deadlineCount = new int[MAX_N]; 
+		Problem[] problems = new Problem[N + 1];
 		
-		sb.append(root).append(" ");
-		if (lCount == 1) {
-			sb.append(Integer.toString(inOrder[inRootIndex - 1]))
-			.append(" "); //root
+		for (int i = 1; i <= N; i++) {
+			line = br.readLine().split(" ");
+			int deadline = Integer.parseInt(line[0]);
+			deadlineCount[deadline]++;
+			int count = Integer.parseInt(line[1]);
+			problems[i] = new Problem(i, deadline, count);
 		}
-		if (lCount > 1) {
-			getPreOrder(inStartIndex, inStartIndex + lCount - 1, postEndIndex - (rCount + 1)); // L tree
-		}
-		
-		if (rCount == 1) {
-			sb.append(Integer.toString(inOrder[inRootIndex + 1]))
-			.append(" ");
-		}
-		if (rCount > 1) {
-			getPreOrder(inRootIndex + 1, inRootIndex + rCount, postEndIndex - 1);
-		}
+		Arrays.sort(problems, 1, N + 1);
+		System.out.println(Arrays.toString(problems));
+		int index = 1;
+		int currentTime = 1;
+		int total = 0;
+		while (index <= N) {
+			int thisDeadline = problems[index].deadline;
+			if (thisDeadline < currentTime) {
+				index++;
+				continue;
+			}
+			//System.out.println(problems[index] + " " + currentTime);
+			total += problems[index].count;
+			currentTime++;
+			index++;
+			
+		} //특정 시간 이하 데드라인중 가장 큰 것 고르기
+		System.out.println(total);
 	}
 }
-/*
- * 	in: 2 1 3
- *  post: 2 3 1
- *  pre : 1 2 3
- *  5
- *  1 2 3 4 5 
- *  5 4 3 2 1
- *  4
- *  4 3 2 1 
- *  4 3 2 1
- */
