@@ -21,7 +21,7 @@ import java.util.PriorityQueue;
  * 3 5
  */
 
-public class Main {	
+public class Main_1781_컵라면_전임송 {	
 	static class Problem {
 		int number;
 		int deadline;
