@@ -15,7 +15,7 @@ import java.util.Queue;
  * n번째 집의 값은 다른색깔 n-1번쨰 집중 더 작은 수
  */
 
-public class Main {	
+public class Main_1149_S1_RGB거리_전임송 {	
 	static final int RED = 0;
 	static final int GREEN = 1; 
 	static final int BLUE = 2; 

@@ -1,47 +1,40 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
-//1541 잃어버린 괄호
-//1. 마이너스 뒤에 괄호 추가 가능
-// 2. 오른쪽으로 이동하면서 마이너스 다음 최고로 증가할때까지 괄호
+//13913 숨바꼭질4
+/*
+ * f(n) = 0;
+ * f(n/3) = f(n) + 1
+ * f(n/2) = f(n) + 1
+ * f(n - 1) = f(n) + 1
+ */
 public class Main2 {
-	static final char MINUS = '-';
-	static final char PLUS = '+';
-	
+	static final int START = 0;
+	static final int END =  100_000;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String line = br.readLine();
-		int lineLength = line.length();
-		//10 - 20 - 30
-		int totalSum = 0;
-		int partialSum = 0;
-		int number = 0;
-		int digits = 1;
-		for (int i = lineLength - 1; i >= 0; i--) {
-			char character = line.charAt(i);
-			if (character >= '0' && character <= '9') { //숫자면
-				if (character == '0') { //0인 경우
-					digits *= 10;
-					continue;
-				}
-				partialSum += (character - '0') * digits;
-				digits *= 10;
+		String[] line = br.readLine().split(" ");
+		int N = Integer.parseInt(line[0]);
+		int K = Integer.parseInt(line[1]);
+		int[] dp = new int[END + 1];
+		Arrays.fill(dp, Integer.MAX_VALUE);
+		dp[N] = 0;
+		
+		for (int i = N; i <= END; i++) {
+			if (i * 2 <= END) {
+				dp[i * 2] = Math.min(dp[i * 2], dp[i] + 1);
 			}
-			if (character == PLUS) {
-				number = 0;
-				digits = 1;
+			if (i + 1 <= END) {
+				dp[i + 1] = Math.min(dp[i + 1], dp[i] + 1);
 			}
-			if (character == MINUS) {
-				partialSum += number;
-				totalSum -= partialSum;
-				partialSum = 0;
-				number = 0;
-				digits = 1;
-			}
-			
 		}
-		totalSum += partialSum; //마지막 숫자 더하기
-		System.out.println(totalSum);
+		for (int i = N; i >= START; i--) {
+			if (i - 1 >= START) {
+				dp[i - 1] = Math.min(dp[i - 1], dp[i] + 1);
+			}
+		}
+		System.out.println(dp[K]);
 	}
 }
