@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
  * dfs
  */
 
-public class Main {	
+public class Main_10971_S2_외판원순회2_전임송 {	
 	static int N;
 	static int[][] adjMatrix;
 	static boolean[] visited;
