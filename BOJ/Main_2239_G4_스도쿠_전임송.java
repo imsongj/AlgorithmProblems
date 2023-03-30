@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 /*
  * 
  */
-public class Main2 {
+public class Main_2239_G4_스도쿠_전임송 {
 	static final int N = 9;
 	static int[][] board;
 	static boolean[][] rows;
