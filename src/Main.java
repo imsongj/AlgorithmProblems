@@ -2,9 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-//10971 외판원순회2
+//5525 IOIOI
 /*
- * dfs
+ * 문자열 읽으면서 연결된 IOI 수 기록
+ * 각 연결된 IOI 마다 Pn의 개수는 연결된 수 - n + 1
  */
 
 public class Main {	
