@@ -10,7 +10,7 @@ import java.util.Queue;
 /*
  * bfs, 키 상태별로 visited배열 
  */
-public class Main2 {
+public class Main_1194_G1_달이차오른다가자_전임송 {
 	static final char START = '0';
 	static final char EXIT = '1';
 	static final char WALL = '#';

@@ -10,7 +10,7 @@ import java.util.Set;
 
 //3307 최장증가부분수열
 
-public class Solution { 
+public class Solution_3307_D3_최장증가부분수열_전임송 { 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int testCase = Integer.parseInt(br.readLine().trim());
