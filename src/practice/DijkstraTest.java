@@ -3,53 +3,67 @@ package practice;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class DijkstraTest {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int V = Integer.parseInt(br.readLine());
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		int start = Integer.parseInt(st.nextToken());
-		int end = Integer.parseInt(st.nextToken());
-		
-		int[][] adjMatirx = new int[V][V];
-		for (int i = 0; i < V; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			for (int j = 0; j < V; j++) {
-				adjMatirx[i][j] = Integer.parseInt(st.nextToken());
-			}
+	static class Edge implements Comparable<Edge> {
+		int v;
+		int weight;
+		public Edge(int v, int weight) {
+			super();
+			this.v = v;
+			this.weight = weight;
+		}
+		@Override
+		public int compareTo(Edge o) {
+			return Integer.compare(weight, o.weight);
 		}
 		
-		final int INF = Integer.MAX_VALUE;
-		int[] distance = new int[V];
-		boolean[] visited = new boolean[V];
-		Arrays.fill(distance, INF);
-		distance[start] = 0;
-		int min;
-		int current;
-		for (int c = 0; c < V; c++) {
-			min = INF;
-			current = -1;
+	}
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int m = sc.nextInt();
+		
+		List<Edge>[] adj = new List[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>(10);
+		}
+		for (int i = 0; i < m; i++) {
+			adj[sc.nextInt()].add(new Edge(sc.nextInt(), sc.nextInt()));
+		}
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		boolean[] visited = new boolean[n];
+		int[] distance = new int[n];
+		Arrays.fill(distance, 1_000_000);
+		pq.add(new Edge(0, 0));
+		visited[0] = true;
+		distance[0] = 0;
+		int count = 0;
+		while (!pq.isEmpty()) {
+			count++;
+			Edge current = pq.poll();
+			visited[current.v] = true;
 			
-			for (int i = 0; i < V; i++) {
-				if (!visited[i] && min > distance[i]) {
-					min = distance[i];
-					current = i;
+			for (Edge edge : adj[current.v]) {
+				if (visited[edge.v]) {
+					continue;
+				}
+				if (current.weight + edge.weight < distance[edge.v]) {
+					distance[edge.v] = current.weight + edge.weight;
+					pq.add(new Edge(edge.v, distance[edge.v]));
 				}
 			}
-			if (current == -1) {
+			if (count == 6) {
 				break;
 			}
-			visited[current] = true;
-			for (int i = 0; i < V; i++) {
-				if (!visited[i] && adjMatirx[current][i] != 0 
-						&& distance[i] > min + adjMatirx[current][i]) {
-					distance[i] = min + adjMatirx[current][i];
-				}
-			}
 		}
-		System.out.println(distance[end] != INF ? distance[end] : -1);
+		System.out.println(Arrays.toString(distance));
+		System.out.println(count);
 	}
 }

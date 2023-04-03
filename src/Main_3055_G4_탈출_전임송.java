@@ -10,7 +10,7 @@ import java.util.Queue;
 /*
  * bfs, 물 차오를 칸 표시
  */
-public class Main2 {
+public class Main_3055_G4_탈출_전임송 {
 	static final char START = 'S';
 	static final char EXIT = 'D';
 	static final char WALL = 'X';

@@ -3,45 +3,47 @@ package practice;
 import java.util.Arrays;
 
 public class SubsetPractice {
-	static int[] parents;
-	
-	public static void makeSet(int v) {
-		parents[v] = v;
-	}
-	
-	findSet(intv) {
-		if (parnets[n] -= v) {
-			reutnr v
-		}
-		return [parnets[]]= findset(parnets[]bv);
-	}
-	public static int findSet(int v) {
-		if (parents[v] == v) {
-			return v;
-		}
-		return parents[v] = findSet(parents[v]);
-	}
-	
-	public static void union(int u, int v) {
-		int rootU = findSet(u);
-		int rootV = findSet(v);
-		if (rootU == rootV) {
-			return;
-		}
-		parents[rootU] = rootV;
-	}
+	static int[] parent;
 	public static void main(String[] args) {
-		parents = new int[5];
-		for (int i = 0; i < 5; i++) {
-			makeSet(i);
+		parent = new int[6];
+	}
+	private void makeSet(int n) {
+		parent[n] = n;
+	}
+	private int findSet(int n) {
+		if (parent[n] == n) {
+			return n;
 		}
-		System.out.println(findSet(1));
-		union(1, 2);
-		union(3, 1);
-		//union(4, 3);
-		System.out.println(findSet(1));
-		System.out.println(findSet(2));
-		System.out.println(findSet(3));
-		System.out.println(Arrays.toString(parents));
+		return parent[n] = findSet(parent[n]);
+	}
+	private void union (int n, int m) {
+		parent[m] = parent[n];
+	}
+	private static boolean nextPermutation(int[] input) {
+		int n = input.length - 1;
+		int i = n;
+		while (i > 0 && input[i] <= input[i - 1]) {
+			i--;
+		}
+		if (i ==0 ) {
+			return false;
+		}
+		int j = n; 
+		while (input[j] <= input[i - 1]) {
+			j--;
+		}
+		swap(input, i-1, j);
+		int k = n;
+		while (k > i) {
+			swap(input, k--, i++);
+		}
+		return true;
+	}
+
+	private static void swap(int[] input, int i, int j) {
+		int tmp = input[i];
+		input[i] = input[j];
+		input[j] = tmp;
+		
 	}
 }

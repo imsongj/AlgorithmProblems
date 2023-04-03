@@ -8,18 +8,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//키순서
-/*
- * 모든 노드의 정보를 받는 노드를 찾아야한다
- * 부모 탐색, 자식 탐색
- */
+//1263 사람네트워크2
 
-public class Solution { 
+public class Solution_1263_D6_사람네트워크2_전임송 { 
 	static final int INF = Integer.MAX_VALUE>>3;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int testCase = Integer.parseInt(br.readLine().trim());
-		StringBuilder sb = new StringBuilder();
+		
 		for (int t = 1; t <= testCase; t++) {
 			String[] input = br.readLine().trim().split(" ");
 			int N = Integer.parseInt(input[0]);
@@ -51,10 +47,10 @@ public class Solution {
 					min = sum;
 				}
 			}
-			sb.append("#").append(t).append(" ").append(min).append('\n');
+			System.out.printf("#%d %d%n", t, min);
 		}
 		//모든 쌍 거리 구하고, 각 정점마다 합
-		System.out.println(sb.toString());
+		
 		
 		br.close();
 	}
