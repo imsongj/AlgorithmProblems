@@ -11,7 +11,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class DijkstraTest {
-	static class Edge implements Comparable<Edge> {
+	static class Edge implements Comparable<Edge>{
 		int v;
 		int weight;
 		public Edge(int v, int weight) {
@@ -21,49 +21,50 @@ public class DijkstraTest {
 		}
 		@Override
 		public int compareTo(Edge o) {
+		
 			return Integer.compare(weight, o.weight);
 		}
 		
 	}
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt();
-		int m = sc.nextInt();
+		int N = sc.nextInt();
+		int M = sc.nextInt();
+		List<Edge>[] adj = new List[N];
+		for (int i = 0; i < N; i++) {
+			adj[i] = new ArrayList<>(5);
+		}
+		for (int i = 0; i < M; i++) {
+			int from = sc.nextInt();
+			int to = sc.nextInt();
+			int weight = sc.nextInt();
+			adj[from].add(new Edge(to, weight));
+		}
 		
-		List<Edge>[] adj = new List[n];
-		for (int i = 0; i < n; i++) {
-			adj[i] = new ArrayList<>(10);
-		}
-		for (int i = 0; i < m; i++) {
-			adj[sc.nextInt()].add(new Edge(sc.nextInt(), sc.nextInt()));
-		}
-		PriorityQueue<Edge> pq = new PriorityQueue<>();
-		boolean[] visited = new boolean[n];
-		int[] distance = new int[n];
-		Arrays.fill(distance, 1_000_000);
-		pq.add(new Edge(0, 0));
-		visited[0] = true;
+		PriorityQueue<Edge> queue = new PriorityQueue<>();
+		boolean[] visited = new boolean[N];
+		int[] distance = new int[N];
+		Arrays.fill(distance, 100_000);
+		queue.add(new Edge(0, 0));
 		distance[0] = 0;
 		int count = 0;
-		while (!pq.isEmpty()) {
-			count++;
-			Edge current = pq.poll();
+		while (!queue.isEmpty()) {
+			Edge current = queue.poll();
 			visited[current.v] = true;
-			
+			if (count == N) {
+				break;
+			}
 			for (Edge edge : adj[current.v]) {
 				if (visited[edge.v]) {
 					continue;
 				}
-				if (current.weight + edge.weight < distance[edge.v]) {
+				if (distance[edge.v] > current.weight + edge.weight) {
 					distance[edge.v] = current.weight + edge.weight;
-					pq.add(new Edge(edge.v, distance[edge.v]));
+					queue.add(new Edge(edge.v, distance[edge.v]));
 				}
-			}
-			if (count == 6) {
-				break;
 			}
 		}
 		System.out.println(Arrays.toString(distance));
-		System.out.println(count);
+		
 	}
 }

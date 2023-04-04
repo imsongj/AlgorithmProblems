@@ -15,7 +15,7 @@ import java.util.Set;
  * floyd-warshall
  */
 
-public class Solution { 
+public class Solution_5643_D4_키순서_전임송 { 
 	static final int INF = Integer.MAX_VALUE>>3;
 	static int[] countConnected;
 	static int N;

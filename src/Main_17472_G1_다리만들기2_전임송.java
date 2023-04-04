@@ -15,7 +15,7 @@ import java.util.List;
  * dfs
  */
 
-public class Main {		
+public class Main_17472_G1_다리만들기2_전임송 {		
 	static final int WATER = 0;
 	static final int UNKNOWN = 1;
 	static final int ISLAND_START = 2;
