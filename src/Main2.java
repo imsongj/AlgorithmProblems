@@ -1,130 +1,68 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
-//3055 탈출
+//1967 트리의 지름
 /*
- * bfs, 물 차오를 칸 표시
+ * 1. 아무 정점에서 제일 먼 정점n을 찾는다 dfs
+ * 2. 제일 먼 정점n에서 제일 먼 정점m까지의 거리를 구한다.dfs
  */
 public class Main2 {
-	static final char START = 'S';
-	static final char EXIT = 'D';
-	static final char WALL = 'X';
-	static final char WATER = '*';
-	static final char PRE_WATER = '+';
-	static final char ROAD = '.';
-	static final int[] dr = {0, 0, -1, 1};
-	static final int[] dc = {-1, 1, 0, 0};
-	static class Position {
-		int r;
-		int c;
-		int moves;
-		public Position(int r, int c, int moves) {
+	static class Edge {
+		int to;
+		int weight;
+		public Edge(int to, int weight) {
 			super();
-			this.r = r;
-			this.c = c;
-			this.moves = moves;
+			this.to = to;
+			this.weight = weight;
 		}
+		
 	}
 	static int N;
-	static int M;
-	static char[][] board;
-	static int minMoves = Integer.MAX_VALUE;
+	static List<Edge>[] adj;
+	static int maxDistance = 0;
+	static int maxNode = 1;
+	static boolean[] visited;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String[] input = br.readLine().split(" ");
-		N = Integer.parseInt(input[0]);
-		M = Integer.parseInt(input[1]);
-		
-		board = new char[N][M];
-		int startR = 0;
-		int startC = 0;
-		String line;
-		for (int r = 0; r < N; r++) {
-			line = br.readLine();
-			for (int c = 0; c < M; c++) {
-				char character = line.charAt(c);
-				board[r][c] = character;
-				if (character == START) {
-					startR = r;
-					startC = c;
-				}
-			}
+		N = Integer.parseInt(br.readLine());
+		adj = new List[N + 1];
+		for (int i = 1; i <= N; i++) {
+			adj[i] = new ArrayList<>(5);
 		}
-		boolean[][] visited = new boolean[N][M];
-		Queue<Position> queue = new ArrayDeque<Position>();
-		queue.add(new Position(startR, startC, 0));
-		visited[startR][startC] = true;
-		Position current;
-		int prevMoves = 1;
-		markWater();
-		while(!queue.isEmpty()) {
-			current = queue.poll();
-			if (current.moves == prevMoves) {
-				markWater();
-				prevMoves++;
-			}
-			//System.out.println(current);
-			for (int d = 0; d < 4; d++) {
-				int newR = current.r + dr[d];
-				int newC = current.c + dc[d];
-				int newMoves = current.moves + 1;
-				
-				if (newR < 0 || newR >= N || newC < 0 || newC >= M) {
-					continue;
-				}
-				if (visited[newR][newC]) {
-					continue;
-				}
-				if (board[newR][newC] == WALL || board[newR][newC] == WATER 
-						|| board[newR][newC] == PRE_WATER) {
-					continue;
-				}
-				if (board[newR][newC] == EXIT) {
-					System.out.println(newMoves);
-					return;
-				}
-				queue.add(new Position(newR, newC, newMoves));
-				visited[newR][newC] = true;
-			}
+		String[] input;
+		for (int i = 0; i < N - 1; i++) {
+			input = br.readLine().split(" ");
+			int from = Integer.parseInt(input[0]);
+			int to = Integer.parseInt(input[1]);
+			int weight = Integer.parseInt(input[2]);
+			adj[from].add(new Edge(to, weight));
+			adj[to].add(new Edge(from, weight));
 		}
-		System.out.println("KAKTUS");
-	}	
-	public static void markWater() {
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < M; c++) {
-				if (board[r][c] == PRE_WATER) {
-					board[r][c] = WATER;
-				}
-			}
+		if (N == 1) {
+			System.out.println(0);
+			return;
 		}
-		
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < M; c++) {
-
-				if (board[r][c] != WATER) {
-					continue;
-				}
-				for (int d = 0; d < 4; d++) {
-					int newR = r + dr[d];
-					int newC = c + dc[d];
-					if (newR < 0 || newR >= N || newC < 0 || newC >= M) {
-						continue;
-					}
-					if (board[newR][newC] == WALL || board[newR][newC] == EXIT 
-							|| board[newR][newC] == WATER) {
-						continue;
-					}
-					board[newR][newC] = PRE_WATER;
-				}
-			}
+		visited = new boolean[N + 1];
+		dfs(1, 0);
+		visited = new boolean[N + 1];
+		dfs(maxNode, 0);
+		System.out.println(maxDistance);
+	}
+	
+	public static void dfs(int node, int distance) {
+		visited[node] = true;
+		if (distance > maxDistance) {
+			maxDistance = distance;
+			maxNode = node;
 		}
-		/*for (int r = 0; r < N; r++) {
-			System.out.println(Arrays.toString(board[r]));
-		}*/
+		for (Edge adjEdge : adj[node]) {
+			if (visited[adjEdge.to]) {
+				continue;
+			}
+			dfs(adjEdge.to, distance + adjEdge.weight);
+		}
 	}
 }

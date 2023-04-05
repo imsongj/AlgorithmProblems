@@ -21,8 +21,8 @@ public class DijkstraTest {
 		}
 		@Override
 		public int compareTo(Edge o) {
-		
-			return Integer.compare(weight, o.weight);
+			// TODO Auto-generated method stub
+			return weight - o.weight;
 		}
 		
 	}
@@ -35,36 +35,34 @@ public class DijkstraTest {
 			adj[i] = new ArrayList<>(5);
 		}
 		for (int i = 0; i < M; i++) {
-			int from = sc.nextInt();
-			int to = sc.nextInt();
-			int weight = sc.nextInt();
-			adj[from].add(new Edge(to, weight));
+			adj[sc.nextInt()].add(new Edge(sc.nextInt(), sc.nextInt()));
 		}
-		
-		PriorityQueue<Edge> queue = new PriorityQueue<>();
+		System.out.println(adj[0]);
 		boolean[] visited = new boolean[N];
 		int[] distance = new int[N];
 		Arrays.fill(distance, 100_000);
-		queue.add(new Edge(0, 0));
+		PriorityQueue<Edge> queue = new PriorityQueue<>();
+		queue.add(new Edge(0,0));
 		distance[0] = 0;
 		int count = 0;
-		while (!queue.isEmpty()) {
+		while(!queue.isEmpty()) {
 			Edge current = queue.poll();
 			visited[current.v] = true;
+			System.out.println(current.v);
 			if (count == N) {
 				break;
 			}
-			for (Edge edge : adj[current.v]) {
-				if (visited[edge.v]) {
+			for (Edge adje : adj[current.v]) {
+				if (visited[adje.v]) {
 					continue;
 				}
-				if (distance[edge.v] > current.weight + edge.weight) {
-					distance[edge.v] = current.weight + edge.weight;
-					queue.add(new Edge(edge.v, distance[edge.v]));
+				if (distance[adje.v] > current.weight + adje.weight) {
+					distance[adje.v] = current.weight + adje.weight;
+					queue.add(new Edge(adje.v, distance[adje.v]));
 				}
 			}
+			count++;
 		}
 		System.out.println(Arrays.toString(distance));
-		
 	}
 }

@@ -15,7 +15,7 @@ import java.util.Stack;
  * 
  */
 
-public class Main {		
+public class Main_2531_S1_회전초밥_전임송 {		
 	static int N;
 	static int k;
 	static int c;

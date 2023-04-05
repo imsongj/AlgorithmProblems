@@ -16,7 +16,7 @@ import java.util.Set;
  * 				높이 차이가 1 나고 그 전 이동 값이 x 이상이면 
  */
 
-public class Solution { 
+public class Solution_4014_모의_활주로건설_전임송 { 
 	static final int INF = Integer.MAX_VALUE>>3;
 	static int[][] map;
 	static int N;
