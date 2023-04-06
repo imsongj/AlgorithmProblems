@@ -10,7 +10,7 @@ import java.util.Queue;
  * 세로이동으로 온 경우, 가로 이동으로 온 경우 따로 visited
  */
 
-public class Solution { 
+public class Solution_8382_D4_방향전환_전임송 { 
 	static final int MIN_VALUE = 0;
 	static final int MAX_VALUE = 200;
 	static final int VALUE_RANGE = 202;
