@@ -2,93 +2,122 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
-//8382 방향전환
+//2383 점심식사시간
 /*
- * bfs
- * 세로이동으로 온 경우, 가로 이동으로 온 경우 따로 visited
+ * subset, 1번 계단 또는 2번 계단선택
+ * 시뮬
+ * 	도착시간으로 정렬, 
+ * 
+ * 	
+ * 
  */
 
-public class Solution { 
-	static final int MIN_VALUE = 0;
-	static final int MAX_VALUE = 200;
-	static final int VALUE_RANGE = 202;
-	static final int HORIZONTAL = 0;
-	static final int VERTICAL = 1;
-	static final int[] DIRECTIONS = {-1, 1};
+public class Solution {
+	static final int NUMBER_OF_STAIRS = 2;
+	static final int NUMBER_OF_PEOPLE_ON_STAIR = 3;
+	static final int STAIR = 3;
+	static final int PERSON = 1;
 	static class Position {
-		int x;
-		int y;
-		int prev;
-		int moves;
-		public Position(int x, int y, int prev, int moves) {
-			super();
-			this.x = x;
-			this.y = y;
-			this.prev = prev;
-			this.moves = moves;
-		}
-		
+		int r;
+		int c;
+		int value;
+		public Position() {};
 	}
-	static int startX;
-	static int startY;
-	static int destX;
-	static int destY;
+	static class Person extends Position {
+		int[] dist;
+		public Person(int r, int c) {
+			super();
+			this.r = r;
+			this.c = c;
+			this.dist = new int[NUMBER_OF_STAIRS];
+		}
+	}
+	static class Stair extends Position {
+		int height;
+		Queue<Person> queue;
+		public Stair(int r, int c, int height) {
+			super();
+			this.r = r;
+			this.c = c;
+			this.height = height;
+			this.queue = new ArrayDeque<>();
+		}
+	}
+	static int N;
+	static int[][] map;
+	static List<Stair> stairs;
+	static List<Person> people;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int testCase = Integer.parseInt(br.readLine().trim());
 		StringBuilder sb = new StringBuilder();
 		for (int t = 1; t <= testCase; t++) {
-			String[] input = br.readLine().trim().split(" ");
-			startX = Integer.parseInt(input[0]) + 100;
-			startY = Integer.parseInt(input[1]) + 100;
-			destX = Integer.parseInt(input[2]) + 100;
-			destY = Integer.parseInt(input[3]) + 100;
+			N = Integer.parseInt(br.readLine());
+			String[] input;
+			stairs = new ArrayList<>(NUMBER_OF_STAIRS);
+			people = new ArrayList<>(10);
+			for (int r = 0; r < N; r++) {
+				input = br.readLine().trim().split(" ");
+				for (int c = 0; c < N; c++) {
+					int number = Integer.parseInt(input[c]);
+					map[r][c] = number;
+
+					if (number == PERSON) {
+						people.add(new Person(r, c));
+						continue;
+					}
+					if (number > 0) {
+						stairs.add(new Stair(r, c, number));
+					}
+				}
+			}
+			for (Person person : people) {
+				person.dist[0] = getDistance(person, stairs.get(0));
+				person.dist[1] = getDistance(person, stairs.get(1));
+			}
 			
-			sb.append('#').append(t).append(' ').append(bfs()).append('\n');
+			sb.append('#').append(t).append(' ').append('\n');
 			
 		}
 		System.out.println(sb);
 	}
 	
-	public static int bfs() {
-		int minMoves = Integer.MAX_VALUE;
-		boolean[][][] visited = new boolean[VALUE_RANGE][VALUE_RANGE][2];
-		Queue<Position> queue = new ArrayDeque<>();
-		queue.add(new Position(startX, startY, HORIZONTAL, 0));
-		visited[startX][startY][HORIZONTAL] = true;
-		queue.add(new Position(startX, startY, VERTICAL, 0));
-		visited[startX][startY][VERTICAL] = true;
-		while (!queue.isEmpty()) {
-			Position curr = queue.poll();
-			for (int d = 0; d < 2; d++) {
-				int nextX = curr.x;
-				int nextY = curr.y;
-				int nextDirection = 0;
-				int nextMoves = curr.moves + 1;
-				if (curr.prev == HORIZONTAL) {
-					nextY += DIRECTIONS[d];
-					nextDirection = VERTICAL;
+	public static int getDistance(Position a, Position b) {
+		return Math.abs(a.r - b.r) + Math.abs(a.c - b.c);
+	}
+	
+	public static void subset() {
+		int numberOfPeople = people.size();
+		PriorityQueue<Person> firstQueue = new PriorityQueue<>(
+				(p1, p2) -> p1.dist[0] - p2.dist[0]);
+		PriorityQueue<Person> secondQueue = new PriorityQueue<>(
+				(p1, p2) -> p1.dist[1] - p2.dist[1]);
+		for (int i = 0; i < 1 << numberOfPeople; i++) {
+			firstQueue.clear();
+			secondQueue.clear();
+			for (int j = 0; j < numberOfPeople; j++) {
+				if ((i & 1 << j) == 0) {
+					firstQueue.add(people.get(j));
 				}
-				if (curr.prev == VERTICAL) {
-					nextX += DIRECTIONS[d];
-					nextDirection = HORIZONTAL;
-				}
-				if (nextX < MIN_VALUE || nextX > MAX_VALUE || nextY < MIN_VALUE || nextY > MAX_VALUE) {
-					continue;
-				}
-				if (visited[nextX][nextY][nextDirection]) {
-					continue;
-				}
-				if (nextX == destX && nextY == destY) {
-					return nextMoves;
-				}
-				queue.add(new Position(nextX, nextY, nextDirection, nextMoves));
-				visited[nextX][nextY][nextDirection] = true;
+				secondQueue.add(people.get(j));
+				calculateTime(firstQueue, secondQueue);
 			}
 		}
-		return 0;
 	}
+	public static void calculateTime(PriorityQueue<Person> firstQueue, 
+			PriorityQueue<Person> secondQueue) {
+		int endTime = 0;
+		int time = 0;
+
+		while (!(firstQueue.isEmpty() && secondQueue.isEmpty())) {
+			
+		}
+	}
+	
 }

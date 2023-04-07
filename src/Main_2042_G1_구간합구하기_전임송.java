@@ -15,7 +15,7 @@ import java.util.Stack;
  * 
  */
 
-public class Main {		
+public class Main_2042_G1_구간합구하기_전임송 {		
 	private static final int UPDATE = 1;
 	private static final int SUM = 1;
 	static int N;

@@ -4,65 +4,61 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-//1967 트리의 지름
+//2887 행성터널
 /*
- * 1. 아무 정점에서 제일 먼 정점n을 찾는다 dfs
- * 2. 제일 먼 정점n에서 제일 먼 정점m까지의 거리를 구한다.dfs
+ * 3차원 mst
  */
 public class Main2 {
-	static class Edge {
-		int to;
-		int weight;
-		public Edge(int to, int weight) {
+	static class Planet {
+		int id;
+		int x;
+		int y;
+		int z;
+		public Planet(int id, int x, int y, int z) {
 			super();
-			this.to = to;
-			this.weight = weight;
+			this.id = id;
+			this.x = x;
+			this.y = y;
+			this.z = z;
 		}
+		
 		
 	}
 	static int N;
-	static List<Edge>[] adj;
-	static int maxDistance = 0;
-	static int maxNode = 1;
 	static boolean[] visited;
+	static List<Planet> planets;
+	static List<Planet> adjPlanets;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		adj = new List[N + 1];
-		for (int i = 1; i <= N; i++) {
-			adj[i] = new ArrayList<>(5);
+		visited = new boolean[N];
+		planets = new ArrayList<>(N);
+		String[] input = br.readLine().split(" ");
+		for (int i = 0; i < N; i++) {
+			int x = Integer.parseInt(input[0]);
+			int y = Integer.parseInt(input[1]);
+			int z = Integer.parseInt(input[2]);
+			planets.add(new Planet(i, x, y, z));
 		}
-		String[] input;
-		for (int i = 0; i < N - 1; i++) {
-			input = br.readLine().split(" ");
-			int from = Integer.parseInt(input[0]);
-			int to = Integer.parseInt(input[1]);
-			int weight = Integer.parseInt(input[2]);
-			adj[from].add(new Edge(to, weight));
-			adj[to].add(new Edge(from, weight));
+		
+		for (int i = 0; i < N; i++) {
+			int minDistance = Integer.MAX_VALUE;
+			int closest = 0;
+			for (int j = 0; j < adjPlanets.size(); j++) {
+				if (j == i) {
+					continue;
+				}
+				int distance = getDistance(planets.get(i), adjPlanets.get(j));
+				if (minDistance > distance) {
+					minDistance = distance;
+					closest = j;
+				}
+			}
+			adjPlanets
 		}
-		if (N == 1) {
-			System.out.println(0);
-			return;
-		}
-		visited = new boolean[N + 1];
-		dfs(1, 0);
-		visited = new boolean[N + 1];
-		dfs(maxNode, 0);
-		System.out.println(maxDistance);
 	}
 	
-	public static void dfs(int node, int distance) {
-		visited[node] = true;
-		if (distance > maxDistance) {
-			maxDistance = distance;
-			maxNode = node;
-		}
-		for (Edge adjEdge : adj[node]) {
-			if (visited[adjEdge.to]) {
-				continue;
-			}
-			dfs(adjEdge.to, distance + adjEdge.weight);
-		}
+	public static int getDistance(Planet a, Planet b) {
+		return Math.min(Math.min(Math.abs(a.x - b.x), Math.abs(a.y - b.y)), Math.abs(a.z - b.z));
 	}
 }
