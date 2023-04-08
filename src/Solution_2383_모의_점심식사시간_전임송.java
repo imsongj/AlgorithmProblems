@@ -21,6 +21,7 @@ public class Solution {
 	static final int NUMBER_OF_STAIRS = 2;
 	static final int STAIR_CAPACITY = 3;
 	static final int WAIT_TIME = 1;
+	static final int STAIR = 3;
 	static final int PERSON = 1;
 	static class Position {
 		int r;
@@ -36,6 +37,13 @@ public class Solution {
 			this.c = c;
 			this.arriveTime = new int[NUMBER_OF_STAIRS];
 		}
+		public Person(int r, int c, int[] arriveTime) {
+			super();
+			this.r = r;
+			this.c = c;
+			this.arriveTime = arriveTime;
+		}
+		
 	}
 	static class Stair extends Position {
 		int height;
@@ -113,7 +121,7 @@ public class Solution {
 			minTime = Math.min(minTime, Math.max(calculateTime(firstQueue, 0), calculateTime(secondQueue, 1)));
 		}
 	}
-	public static int calculateTime(PriorityQueue<Person> queue, int stairNum) { 
+	public static int calculateTime(PriorityQueue<Person> queue, int stairNum) { //3명 전 시간 저장
 		int endTime = 0;
 		int stairLength = stairs.get(stairNum).height;
 		int[] prevTimes = new int[queue.size() + 1];
