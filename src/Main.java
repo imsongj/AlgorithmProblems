@@ -1,82 +1,95 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
 
 /*
- * 2042 구간합구하기
+ * 25331 Drop7
  * 
  */
 
 public class Main {		
-	private static final int UPDATE = 1;
-	private static final int SUM = 1;
-	static int N;
-	static long[] tree;
+	static final int N = 7;
+	static final int EMPTY = 0;
+	static int[][] board;
+	static int[][] copyBoard;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		String[] input = br.readLine().split(" ");
-		N = Integer.parseInt(input[0]);
-		int M = Integer.parseInt(input[1]);
-		int K = Integer.parseInt(input[2]);
-		long[] numbers = new long[N];
-		tree = new long[N + 1];	
+		board = new int[N][N];
+		copyBoard = new int[N][N];
+		String[] input;
 		for (int i = 0; i < N; i++) {
-			numbers[i] = Long.parseLong(br.readLine());
-		}
-		//System.out.println(Arrays.toString(numbers));
-		for (int i = 1; i <= N; i++) {
-			add(i, numbers[i - 1]);
-		}
-		//System.out.println(Arrays.toString(tree));
-		for (int i = 0; i < M + K; i++) {
 			input = br.readLine().split(" ");
-			int a = Integer.parseInt(input[0]);
-			int b = Integer.parseInt(input[1]);
-			long c = Long.parseLong(input[2]);
-			if (a == UPDATE) {
-				update(b, numbers[b - 1], c);
-				numbers[b - 1] = c;
+			for (int j = 0; j < N; j++) {
+				board[i][j] = Integer.parseInt(input[j]);
+			}
+		}
+		for (int r = 0; r < N; r++) {
+			copyBoard[r] = Arrays.copyOf(board[r], N);
+		}
+		int number = Integer.parseInt(br.readLine());
+		/*for (int c = 0; c < N; c++) { // 떨어뜨리는 위치
+			copyBoard[0][c] = number;
+			gravity(c);
+		}*/
+		copyBoard[0][2] = number;
+		gravity(2);
+		checkRow(6);
+		for (int c = 0; c < N; c++) { // 떨어뜨리는 위치
+			System.out.println(Arrays.toString(copyBoard[c]));
+		}
+		
+	}
+	
+	public static void remove() {
+		for (int r = 0; r < N; r++) {
+			
+		}
+	}
+	
+	public static void checkRow(int r) {
+		int length = 0;
+		int start = 0;
+		for (int c = 0; c < N; c++) {
+			if (copyBoard[r][c] != EMPTY) {
+				length++;
 				continue;
 			}
-			sb.append(rangeSum((int)b,(int)c)).append('\n');
+			removeRow(r, start, length);
+			start = c + 1;
 		}
-		System.out.println(sb);
+		removeRow(r, start, length);
 	}
 	
-	public static void add(int i, long numbers) {
-		while (i < N + 1) {
-			tree[i] += numbers;
-			i += (i & -i); //k 값 (제일 마지막 1)
+	public static void removeRow(int r, int start, int length) {
+		boolean changed = false;
+		for (int j = start; j < length; j++) {
+			if (copyBoard[r][j] == length) {
+				copyBoard[r][j] = EMPTY;
+				gravity(j);
+				changed = true;
+			}
 		}
-	}
-	
-	public static void update(int b, long numbers, long c) {
-		while (b < N + 1) {
-			tree[b] -= numbers;
-			tree[b] += c;
-			b += (b & -b); //k 값 (제일 마지막 1)
+		if (changed) {
+			checkRow(r);
 		}
-		System.out.println(Arrays.toString(tree));
+		
 	}
-	
-	public static long sum(int c) {
-		long ans = 0;
-		while (c > 0) {
-			ans += tree[c];
-			c -= (c & -c);
+	public static void gravity(int c) {
+		for (int r = N - 2; r >= 0; r--) {
+			if (copyBoard[r][c] == EMPTY) {
+				continue;
+			}
+			int i = r + 1;
+			while (i < N) {
+				
+				if (copyBoard[i][c] != EMPTY) {
+					break;
+				}
+				copyBoard[i][c] = copyBoard[i - 1][c];
+				copyBoard[i - 1][c] = EMPTY;
+				i++;
+			}
 		}
-		return ans;
-	}
-	public static long rangeSum(int b, int c) {
-		return sum(c) - sum(b - 1);
 	}
 }
