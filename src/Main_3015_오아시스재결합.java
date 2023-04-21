@@ -14,7 +14,7 @@ import java.util.Stack;
  * 3. 키가 같은 사람이 들어오면 -> map 에 연속된 같은 키 사람 카운트, tmpstack 쓰면 시간초과
  */
 
-public class Main {		
+public class Main_3015_오아시스재결합 {		
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
