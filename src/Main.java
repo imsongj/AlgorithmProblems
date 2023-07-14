@@ -1,102 +1,80 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.PriorityQueue;
 
 public class Main {
     /*
-    1918 후위표기식
-    우선순위
-    (), , /, + , -, 왼쪽에서 오른쪽으로
-    (a+bc) + d
-    a+bc+d abc+d+
-    a+bcd+e abcd+e+
-    a+b+c ab+c+ if same priority, pop
-                if lower priority, pop
-                if higher pririty, add then pop
-                if close bracket, pop
-    ab+c abc+
-    string ab
-    q + *
-    queue to save operations
+    1202 보석도둑
+ 	최대한 작은 가방부터 가장 가벼운 보석을 넣는다
 
-    재귀 구현 필요, 괄호 처리 필요
-    */
-    public static final String A = "";
+   	*/
+	public static class Jewel implements Comparable<Jewel> {
+		int weight;
+		int price;
+
+		public Jewel(int weight, int price) {
+			this.weight = weight;
+			this.price = price;
+		}
+
+		@Override
+		public int compareTo(Jewel j) {
+			if (this.weight == j.weight) {
+				return Integer.compare(this.price, j.price);
+			}
+			return Integer.compare(this.weight, j.weight);
+		}
+
+		@Override
+		public String toString() {
+			return "Jewel{" +
+				"weight=" + weight +
+				", price=" + price +
+				'}';
+		}
+	}
+
+	public static Jewel[] jewels;
+	public static int[] capacity;
+
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String equation = br.readLine();
-        System.out.println(getPost(equation));
-    }
-    
-    public static String getPost(String original) {
-    	StringBuilder sb = new StringBuilder();
-        char prevOp = ' ';
-        int index = 0;
-        while (index < original.length() - 1) {
-        	char current = original.charAt(index);
-            String next = original.substring(index + 1, index + 2);
-            int nextLength = 2;
-            if (next.equals("(")) {
-            	String insideBracket = original.substring(index + 2, findCloseBracket(original, index + 1));
-            	next = getPost(insideBracket);
-            	nextLength = insideBracket.length() + 2 + 1;
-            }
-            if (current == '(') {
-            	String insideBracket = original.substring(index + 1, findCloseBracket(original, index));
-            	String post = getPost(insideBracket);
-            	nextLength = insideBracket.length() + 2;
-            	sb.append(post);
-            	index += nextLength;
-            	continue;
-            }
-            if (current >= 'A' && current <= 'Z') {
-                sb.append(current);
-                index++;
-                continue;
-            }
-            if (prevOp == ' ') {
-                prevOp = current;
-                sb.append(next);
-                index += nextLength;
-                continue;
-            }
-            if (prevOp == '-' || prevOp == '+') {
-                if (current == '*' || current == '/') {
-                    sb.append(next);
-                    sb.append(current);
-                    index += nextLength;
-                    continue;
-                }
-                sb.append(prevOp);
-                sb.append(next);
-                prevOp = current;
-                index += nextLength;
-                continue;
-            }
-            sb.append(prevOp);
-            sb.append(next);
-            prevOp = current;
-            index += nextLength;
-        }
-        sb.append(prevOp);
+        String[] input = br.readLine().split(" ");
+        int N = Integer.parseInt(input[0]);
+        int K = Integer.parseInt(input[1]);
 
-        return sb.toString();
-    }
-    
-	public static int findCloseBracket(String target, int startIndex) {
-		int count = 0;
-		for (int i = startIndex; i < target.length(); i++) {
-			if (target.charAt(i) == '(') {
-				count++;
-			}
-			if (target.charAt(i) == ')') {
-				count--;
-				if (count == 0) {
-					return i;
+		jewels = new Jewel[N];
+		capacity = new int[K];
+		Jewel[] inBag = new Jewel[K];
+
+		PriorityQueue<Jewel> pq = new PriorityQueue<>();
+		for (int i = 0; i < N; i++) {
+			input = br.readLine().split(" ");
+			int w = Integer.parseInt(input[0]);
+			int p = Integer.parseInt(input[1]);
+			pq.add(new Jewel(w, p));
+		}
+		for (int i = 0; i < K; i++) {
+			int c = Integer.parseInt(br.readLine());
+			capacity[i] = c;
+		}
+		Arrays.sort(capacity);
+
+		int bagIndex = 0;
+		Jewel current;
+		while (bagIndex < K && !pq.isEmpty()) {
+			current = pq.poll(); //최소 무게부터 가방 전체 조회?
+			//보석 들어갈수 있으면 넣고 다시 current 뽑기
+			if (current.weight < capacity[bagIndex]) {
+				if (inBag[bagIndex].price <= current.price) {
+					pq.add(inBag[bagIndex]);
+					inBag[bagIndex] = current;
 				}
 			}
 		}
-		return 0;
-	}
-		
+        System.out.println(Arrays.toString(jewels));
+    }
 }

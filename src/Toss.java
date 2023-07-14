@@ -5,12 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
+
 
 public class Toss {
 	public static void main(String[] args) {
 		Toss toss = new Toss();
-		System.out.println(new Solution3().solution(new String[] {"이름에서 공백, 특수문자 제외"}));
 	}
 	
 	
@@ -43,7 +44,6 @@ public class Toss {
 	class Solution7 {
 		public int solution(int[] schedules) {
 	        int answer = 0;
-	        pq.add(0);
 	        int prev = schedules[0];
 	        int max = 0;
 	        for (int i = 1; i < schedules.length; i++) {

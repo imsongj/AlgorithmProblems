@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class PrimTest {
 	
 	public static void main(String[] args) {
-		int N;
+		int N = 3;
 		int[][] map = new int[N][N];
 		boolean[] visited = new boolean[N];
 		ArrayList<Integer> selected = new ArrayList<>(N);
