@@ -68,6 +68,7 @@ public class Main {
 		while (bagIndex < K && !pq.isEmpty()) {
 			current = pq.poll(); //최소 무게부터 가방 전체 조회?
 			//보석 들어갈수 있으면 넣고 다시 current 뽑기
+			//최소 가방 크기보다 큰 보석은 QUE에 넣지 않음
 			if (current.weight < capacity[bagIndex]) {
 				if (inBag[bagIndex].price <= current.price) {
 					pq.add(inBag[bagIndex]);
@@ -75,6 +76,10 @@ public class Main {
 				}
 			}
 		}
+		//무게 작은 가방마다
+			//queue에서 poll
+				//만약 보석이 가방무게보다 크면 다시 큐에 넣기
+				//만약 보석이 가방 무게보다 크거나 작으면 가방에 넣기, 원래 가방에 있던 보석 다시 큐에 넣기;
         System.out.println(Arrays.toString(jewels));
     }
 }
