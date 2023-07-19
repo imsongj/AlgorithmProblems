@@ -65,17 +65,21 @@ public class Main {
 
 		int bagIndex = 0;
 		Jewel current;
-		while (bagIndex < K && !pq.isEmpty()) {
-			current = pq.poll(); //최소 무게부터 가방 전체 조회?
-			//보석 들어갈수 있으면 넣고 다시 current 뽑기
-			//최소 가방 크기보다 큰 보석은 QUE에 넣지 않음
-			if (current.weight < capacity[bagIndex]) {
-				if (inBag[bagIndex].price <= current.price) {
-					pq.add(inBag[bagIndex]);
-					inBag[bagIndex] = current;
+		for (int i = 0; i < K; i++) {
+			while (!pq.isEmpty()) {
+				current = pq.poll(); //최소 무게부터 가방 전체 조회?
+				//보석 들어갈수 있으면 넣고 다시 current 뽑기
+				//최소 가방 크기보다 큰 보석은 QUE에 넣지 않음
+				if (current.weight <= capacity[i]) {
+					if (inBag[i].price <= current.price) {
+						pq.add(inBag[i]);
+						inBag[i] = current;
+					}
 				}
 			}
 		}
+
+
 		
 		
 		//무게 작은 가방부터
