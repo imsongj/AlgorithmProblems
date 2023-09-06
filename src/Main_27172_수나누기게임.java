@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class Main {
+public class Main_27172_수나누기게임 {
     /*
     27172 수 나누기 게임
 	정렬
