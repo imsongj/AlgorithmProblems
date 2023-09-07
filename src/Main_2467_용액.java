@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class Main {
+public class Main_2467_용액 {
     /*
     2467 용액
 	양 끝에서 포인터 시작
