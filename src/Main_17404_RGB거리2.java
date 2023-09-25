@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 
-public class Main {
+public class Main_17404_RGB거리2 {
     /*
     17404 RGB거리2
 		3가지 색 중 한가지 색만 사용해서 나온 값들 중 그 한가지 색을 뺀 두 값을 비교한다 * 3
