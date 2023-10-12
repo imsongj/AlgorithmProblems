@@ -66,13 +66,7 @@ public class Main {
 
 		int capacity;
 		while (!bags.isEmpty()) {
-			current = pqJewel.poll();
-			if (current.weight <= capacity) {
-				sum += current.price;
-				if (!pqBag.isEmpty()) {
-					capacity = pqBag.poll();
-				}
-			}
+
 		}
 
 		System.out.println(sum);
