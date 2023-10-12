@@ -1,64 +1,80 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Stack;
+
 
 public class Main {
-    /*
-		2623 음악프로그램
-		위상정렬
-   	*/
-	static List<Integer> answer = new ArrayList<>();
-	static List<List<Integer>> graph = new ArrayList<>();
-	static int[] indegree;
-    public static void main(String args[]) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String[] input = br.readLine().split(" ");
-        int N = Integer.parseInt(input[0]);
-		int M = Integer.parseInt(input[1]);
-		indegree = new int[N + 1];
+	/*
+	1202 보석도둑
+	 최대한 작은 가방부터 가장 비싼 보석을 넣는다
+	무게 적은 순으로 보석 정렬
+	작은 가방부터
+		작은 가방의 무게 이하의 보석들 pq에 넣어서 제일 위에거
+	 */
+	public static class Jewel implements Comparable<Jewel> {
+		int weight;
+		int price;
 
-		for (int i = 0; i <= N; i++) {
-			graph.add(new ArrayList<>());
+		public Jewel(int weight, int price) {
+			this.weight = weight;
+			this.price = price;
 		}
-		for (int i = 0; i < M; i++) {
-			input = br.readLine().split(" ");
-			for (int j = 1; j < input.length - 1; j++) {
-				int a = Integer.parseInt(input[j]);
-				int b = Integer.parseInt(input[j + 1]);
-				indegree[b]++;
-				graph.get(a).add(b);
-			}
+
+		@Override
+		public int compareTo(Jewel j) {
+			//compare weight
+			return Integer.compare(this.weight, j.weight);
 		}
-		Queue<Integer> queue = new ArrayDeque<>();
-		for (int i = 1; i <= N; i++) {
-			if(indegree[i] == 0) {
-				queue.add(i);
-			}
+
+		@Override
+		public String toString() {
+			return "Jewel{" +
+				"weight=" + weight +
+				", price=" + price +
+				'}';
 		}
+	}
+
+	public static void main(String args[]) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String[] input = br.readLine().split(" ");
+		int N = Integer.parseInt(input[0]);
+		int K = Integer.parseInt(input[1]);
+
+		Jewel[] inBag = new Jewel[K];
+
+		List<Jewel> jewels = new ArrayList<>();
+		PriorityQueue<Integer> bags = new PriorityQueue<>();
 
 		for (int i = 0; i < N; i++) {
-			if (queue.isEmpty()) {
-				System.out.println(0);
-				return;
-			}
-			int current = queue.poll();
-			answer.add(current);
-			for (int adj : graph.get(current)) {
-				indegree[adj]--;
-				if (indegree[adj] == 0) {
-					queue.add(adj);
+			input = br.readLine().split(" ");
+			int w = Integer.parseInt(input[0]);
+			int p = Integer.parseInt(input[1]);
+			jewels.add(new Jewel(w, p));
+		}
+
+		for (int i = 0; i < K; i++) {
+			int c = Integer.parseInt(br.readLine());
+			bags.add(c);
+		}
+
+		long sum = 0;
+
+		int capacity;
+		while (!bags.isEmpty()) {
+			current = pqJewel.poll();
+			if (current.weight <= capacity) {
+				sum += current.price;
+				if (!pqBag.isEmpty()) {
+					capacity = pqBag.poll();
 				}
 			}
 		}
-		for (int i : answer) {
-			System.out.println(i);
-		}
-    }
+
+		System.out.println(sum);
+	}
 }
