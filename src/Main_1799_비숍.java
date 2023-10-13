@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main {
+public class Main_1799_비숍 {
 	/*
 	1799 비숍
 	검은칸 흰칸 분리
