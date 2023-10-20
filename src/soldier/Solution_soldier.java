@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-class Solution
+class Solution_soldier
 {
 	private final static int CMD_INIT				= 1;
 	private final static int CMD_HIRE				= 2;
