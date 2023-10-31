@@ -1,42 +1,44 @@
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Stack;
 
 class Solution {
 	public static void main(String[] args) {
 		Solution s = new Solution();
 		System.out.println(
-			s.solution("4177252841", 4)
+			s.solution(3,  new int[][]{{1, 1, 0}, {1, 1, 0}, {0, 0, 1}})
 		);
 	}
-	public String solution(String number, int k) {
-		String answer = number;
-		int j = 0;
-		Stack<Character> stack = new Stack<>();
-		stack.push(number.charAt(0));
-		for (int i = 1; i < number.length(); i++) {
-			Character c = number.charAt(i);
-			while (!stack.isEmpty() && stack.peek() < c) {
-				if (j == k) {
-					break;
+	static int[] parents;
+	int find(int a) {
+		if (parents[a] == a) return a;
+		return parents[a] = find(parents[a]);
+	}
+	void union(int a, int b) {
+		int parentA = find(a);
+		int parentB = find(b);
+		if (parentA != parentB) {
+			parents[parentA] = parentB;
+		}
+	}
+
+	public int solution(int n, int[][] computers) {
+		int answer = 0;
+		parents = new int[n];
+		for (int i = 0; i < n; i++) {
+			parents[i] = i;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (computers[i][j] == 1 && i != j) {
+					union(i, j);
 				}
-				stack.pop();
-				j++;
 			}
-			stack.push(c);
 		}
-		while (j < k) {
-			stack.pop();
-			j++;
+		for (int i = 0; i < n; i++) {
+			if (parents[i] == i) answer++;
 		}
-		StringBuilder sb =  new StringBuilder();
-		while (!stack.isEmpty()) {
-			sb.append(stack.pop());
-		}
-		answer = sb.reverse().toString();
 		return answer;
 	}
+
+
 }
